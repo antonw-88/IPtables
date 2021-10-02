@@ -1,0 +1,85 @@
+ARP - Address Resolution Protocol - Translates IP addresses to Ethernet Addresses. Translation is only done for outgoing IP packets, because this is when the IP header and the Ethernet header are created. Maps an IP-address to a physical-machine-address(MAC-address/Media Access Control). When an incoming packet destined for a host machine on a particular local area network arrives at a gateway, the gateway asks the ARP program to find a physical host or MAC address that matches the IP address.
+RARP - Reverse Address Resolution Protocol - RARP enables machines which don't know their IP-address, to request their IP address from the gateway's ARP cache.
+
+IP - Internet Protocol - Basically the foundational layer of the internet. provide the
+  functions necessary to deliver a package of bits (an internet
+  datagram) from a source to a destination over an interconnected system
+  of networks.  There are no mechanisms to augment end-to-end data
+  reliability, flow control, sequencing, or other services commonly
+  found in host-to-host protocols.  The internet protocol can capitalize
+  on the services of its supporting networks to provide various types
+  and qualities of service.
+  The function or purpose of Internet Protocol is to move datagrams
+  through an interconnected set of networks.  This is done by passing
+  the datagrams from one internet module to another until the
+  destination is reached.  The internet modules reside in hosts and
+  gateways in the internet system.  The datagrams are routed from one
+  internet module to another through individual networks based on the
+  interpretation of an internet address.  Thus, one important mechanism
+  of the internet protocol is the internet address.
+ECN - Explicit Congestion Notification - ECN allows end-to-end notification of network congestion without dropping packets.
+
+TCP - Transmission Control Protocol - Resides on top of IP - Guarantees delivery - Two typical network applications which use TCP: FTP and the TELNET - Other popular TCP network applications include: X-Window System, rcp(remote copy) - TCP requires more CPU and network bandwidth - 
+
+FTP - File Transfer Protocol
+
+UDP - User Datagram Protocol - Reside on top of the IP - Does not guarantee delivery - 
+
+NFS - Network File System
+
+SNMP - Simple Network Management Protocol
+
+PPP - Point-to-Point protocol - Handles data transport - Creates an immediate connection between two nodes - Circuit needs to be Duplex -  layer 2
+
+RIP - Routing information Protocol - Provides guidelines for routers to decide how to route information -
+
+ICMP - Internet Control Message Protocol - Used by network devices, to send error messages and information about non-available or non-reachable systems. Ping is a function of the ICMP. As is Traceroute. 
+
+DNS - Domain Name System - Makes sure that the address conversion functions correctly. Converts for example google.com into an ip-address.
+
+Telnet - Primarily used for textbased logins, but also for various other textbased communications occuring within a computer-system.
+
+Ethernet - Ethernet is the most widely installed local area network (LAN) technology. Ethernet is a link layer protocol in the TCP/IP stack, describing how networked devices can format data for transmission to other network devices on the same network segment, and how to put that data out on the network connection. It touches both Layer 1 (the physical layer) and Layer 2  (the data link layer) on the OSI network protocol model. Ethernet defines two units of transmission, packet and frame. The frame includes not just the "payload" of data being transmitted but also addressing information identifying the physical "Media Access Control" (MAC) addresses of both sender and receiver, VLAN tagging and quality of service information, and error-correction information to detect problems in transmission. Each frame is wrapped in a packet, which affixes several bytes of information used in establishing the connection and marking where the frame starts.
+
+SSH - SSH, also known as Secure Socket Shell, is a network protocol that provides administrators with a secure way to access a remote computer. SSH also refers to the suite of utilities that implement the protocol. Secure Shell provides strong authentication and secure encrypted data communications between two computers connecting over an insecure network such as the Internet. SSH is widely used by network administrators for managing systems and applications remotely, allowing them to log in to another computer over a network, execute commands and move files from one computer to another.
+
+Diverse:
+Full Duplex - Data can go in both directions simultaneously.
+
+Modes of communication:
+Unicast - Only to one desination
+Broadcast message - sent from one source to every possible destination - every destination withinh same local network
+Multicast - from one source to any destination which is expecting to receive the message - channels subscribing to the channel
+Anycast - from one source to the most suitable destination.
+
+OSM-layers:
+1. Physical - 
+2. Data Link: Responsible for the physical medium and communcation on local link.
+	- CSMA/CD() 
+	- CSMA/CA - 
+	- Mac addresses - 
+3. Network: This layer makes it possible to communicate beyond local links.
+	# Routing protocols - 
+	# End-to-end encryption -
+	# IP addresses -
+4. Transport: 
+	# Connections oriented - TCP - Sending computer trying to make sure it can establish and maintan connection.
+	# Connectionless - UDP - Will only send the data -
+	# Message segmentation - If message to big to be sent in one package. Segments the package.
+	# Error Handling - 
+	# Flow Control
+5. Session layer: Makes the connection manageable. 
+	# Establish 
+	# 
+	# 
+	#  
+6. Presentation layer: Provides the context. Encodings. Different systems. Translates. 
+7. Application layer: Application is not the application layer. HTTP is an application layer. Protocol specifies rules.
+
+Duplex:
+Simplex - one computer communicates, other computer can't respond. One-way communication.
+Half duplex - Both computers can send communication, but only one at a time.
+Full duplex - Both computers can communicate at same time.
+
+
+

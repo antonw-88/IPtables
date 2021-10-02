@@ -1,0 +1,72 @@
+#IPtables rules for simple everyday browsing
+
+# Future rules:
+# Ack-storm
+# Ping-flood
+# Syn-cookies
+
+# Flush all iptables filter rules first - Flush does not affect default policy
+sudo iptables -P INPUT DROP
+sudo iptables -P OUTPUT DROP
+sudo iptables -P FORWARD DROP
+sudo iptables -F INPUT
+sudo iptables -F OUTPUT
+sudo iptables -F FORWARD
+
+# Allow LoopBack communication
+sudo iptables -A INPUT -i lo -j ACCEPT
+
+# Keep established connections open
+sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
+
+# Drop SSDP
+sudo iptables -A INPUT -p udp --dport 1900 -j DROP
+sudo iptables -A OUTPUT -p udp --dport 1900 -j DROP
+sudo iptables -A INPUT -p tcp --dport 1900 -j DROP
+sudo iptables -A OUTPUT -p tcp --dport 1900 -j DROP
+
+# Drop and log invalid packets
+sudo iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
+sudo iptables -A OUTPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-tcp-options --log-ip-options
+sudo iptables -A OUTPUT -m state --state INVALID -j DROP
+sudo iptables -A INPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-tcp-options --log-ip-options
+sudo iptables -A INPUT -m state --state INVALID -j DROP
+
+# Limitations
+#sudo iptables -A INPUT -p tcp -syn -m multiport --dport 80,53,443,20,22 -m connlimit --connlimit-above 20 -j DROP
+
+# Spoofed packets
+# sudo iptables -A INPUT -i eth1 -s ! 192.168.10.0/24 -j LOG --log-prefix "SPOOFED PKT "
+# sudo iptables -A INPUT -i eth1 -s ! 192.168.10.0/24 -j DROP
+
+# Allow out TCP
+sudo iptables -A OUTPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --dport 53 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --dport 22 -j ACCEPT
+sudo iptables -A OUTPUT -p tcp --dport 20 -j ACCEPT
+
+#sudo iptables -A INPUT -p tcp --dport 80 -j ACCEPT
+#sudo iptables -A INPUT -p tcp --dport 53 -j ACCEPT
+#sudo iptables -A INPUT -p tcp --dport 443 -j ACCEPT
+#sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+#sudo iptables -A INPUT -p tcp --dport 20 -j ACCEPT
+
+# Allow out UDP
+sudo iptables -A OUTPUT -p udp --dport 80 -j ACCEPT
+sudo iptables -A OUTPUT -p udp --dport 53 -j ACCEPT
+sudo iptables -A OUTPUT -p udp --dport 443 -j ACCEPT
+sudo iptables -A OUTPUT -p udp --dport 22 -j ACCEPT
+sudo iptables -A OUTPUT -p udp --dport 20 -j ACCEPT
+
+# Allow in SSH (add SSH for only one IP region for greater protection)
+sudo iptables -A INPUT -p udp --dport 22 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT
+
+# Endrule DROP and LOG ALL
+sudo iptables -A INPUT -j LOG --log-tcp-options --log-ip-options
+sudo iptables -A FORWARD -j LOG --log-tcp-options --log-ip-options
+sudo iptables -A OUTPUT -j LOG --log-tcp-options --log-ip-options
+sudo iptables -A INPUT -j DROP
+sudo iptables -A FORWARD -j DROP
+sudo iptables -A OUTPUT -j DROP

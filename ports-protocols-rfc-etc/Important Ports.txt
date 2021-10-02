@@ -1,0 +1,27 @@
+1 : ICMP
+4 : IPv4 encapsulation
+6 : TCP
+17: UDP
+27: RDP
+37: DDP
+41: IPv6 encapsulation
+
+
+20/21: FTP
+22: SSH
+23: Telnet
+25: SimpleMailTransfer
+53: DNS
+67/68: Dynamic Host Configuration
+69: Trivial FTP
+80: HTTP
+110: Post Office
+123: Network Time
+137-39: NetBIOS
+143: Internet Message Access
+161-62: Simple Network Management
+179: Border Gateway
+389: Lightweight Directory Access
+443: HTTPS - over TLS/SSL
+636: Lightweight DAPS 
+989-90: FTP over TLS/SSL

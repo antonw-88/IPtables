@@ -40,6 +40,7 @@ sudo nft add rule ip filter OUTPUT tcp dport 443 counter accept
 
 #Allow out UDP
 sudo nft add rule ip filter OUTPUT udp dport 53 counter accept
+sudo nft add rule ip filter OUTPUT udp sport 53 counter accept
 
 #Allow in SSH (add SSH for only one IP region for greater protection)
 sudo nft add rule ip filter INPUT tcp dport 22 counter accept

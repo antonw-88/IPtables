@@ -29,6 +29,9 @@ sudo iptables -A OUTPUT -p tcp --dport 1900 -j DROP
 sudo iptables -A OUTPUT -p icmp --icmp-type any -j ACCEPT
 sudo iptables -A INPUT -p icmp --icmp-type any -j ACCEPT
 
+# Allow traceroute
+sudo iptables -I OUTPUT -p udp --dport 33434:33474 -j ACCEPT
+
 # Drop and log invalid packets
 sudo iptables -A INPUT -m conntrack --ctstate INVALID -j DROP
 sudo iptables -A OUTPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-tcp-options --log-ip-options

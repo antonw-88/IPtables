@@ -1,10 +1,5 @@
 #IPtables rules for simple everyday browsing
 
-# Future rules:
-# Ack-storm
-# Ping-flood
-# Syn-cookies
-
 # Flush all iptables filter rules first - Flush does not affect default policy
 sudo iptables -P INPUT DROP
 sudo iptables -P OUTPUT DROP
@@ -35,13 +30,6 @@ sudo iptables -A OUTPUT -m state --state INVALID -j LOG --log-prefix "DROP INVAL
 sudo iptables -A OUTPUT -m state --state INVALID -j DROP
 sudo iptables -A INPUT -m state --state INVALID -j LOG --log-prefix "DROP INVALID " --log-tcp-options --log-ip-options
 sudo iptables -A INPUT -m state --state INVALID -j DROP
-
-# Limitations
-#sudo iptables -A INPUT -p tcp -syn -m multiport --dport 80,53,443,20,22 -m connlimit --connlimit-above 20 -j DROP
-
-# Spoofed packets
-# sudo iptables -A INPUT -i eth1 -s ! 192.168.10.0/24 -j LOG --log-prefix "SPOOFED PKT "
-# sudo iptables -A INPUT -i eth1 -s ! 192.168.10.0/24 -j DROP
 
 # Allow out TCP
 sudo iptables -A OUTPUT -p tcp --dport 80 -m conntrack --ctstate NEW,ESTABLISHED -j ACCEPT

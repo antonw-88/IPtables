@@ -1,58 +1,78 @@
+#!/sbin/nft -f
+
 #NFtables rules for simple everyday browsing
 
-#Set all default policy rules
 
-#Flush all iptables filter rules first - default policy not affected
+table ip filter {
+	#Set all default policy rules
 
-#Allow LoopBack communication
-sudo nft add rule ip filter INPUT iifname "lo" counter accept
+	#Flush all iptables filter rules first - default policy not affected
+		
+	#Input rules
+	chain input {	
+		#Allow LoopBack communication
+		sudo nft add rule ip filter INPUT iifname "lo" counter accept
+	
+		#Keep established connections open
+		sudo nft add rule ip filter INPUT ct state related,established counter accept
+	
+		#Drop SSDP
+		sudo nft add rule ip filter INPUT udp dport 1900 counter drop
+		sudo nft add rule ip filter INPUT tcp dport 1900 counter drop
 
-#Keep established connections open
-sudo nft add rule ip filter INPUT ct state related,established counter accept
+		#Drop and log invalid packets
+		sudo nft add rule ip filter INPUT ct state invalid counter drop
+		sudo nft add rule ip filter INPUT ct state invalid  counter log prefix \"DROP INVALID \" flags tcp options flags ip options
+		sudo nft add rule ip filter INPUT ct state invalid  counter drop
+		
+		#Allow in SSH (add SSH for only one IP region for greater protection)
+		sudo nft add rule ip filter INPUT tcp dport 22 counter accept
+		sudo nft add rule ip filter INPUT udp dport 22 counter accept
+		
+		#Endrule DROP and LOG ALL
+		sudo nft add rule ip filter INPUT counter log flags tcp options flags ip options
+		sudo nft add rule ip filter INPUT counter drop		
+	}
 
-#Drop SSDP
-sudo nft add rule ip filter INPUT udp dport 1900 counter drop
-sudo nft add rule ip filter OUTPUT udp dport 1900 counter drop
-sudo nft add rule ip filter INPUT tcp dport 1900 counter drop
-sudo nft add rule ip filter OUTPUT tcp dport 1900 counter drop
 
-#Drop and log invalid packets
-sudo nft add rule ip filter INPUT ct state invalid counter drop
-sudo nft add rule ip filter OUTPUT ct state invalid  counter log prefix \"DROP INVALID \" flags tcp options flags ip options
-sudo nft add rule ip filter OUTPUT ct state invalid  counter drop
-sudo nft add rule ip filter INPUT ct state invalid  counter log prefix \"DROP INVALID \" flags tcp options flags ip options
-sudo nft add rule ip filter INPUT ct state invalid  counter drop
+	#Output rules
+	chain output {
+		#Drop SSDP
+		sudo nft add rule ip filter OUTPUT tcp dport 1900 counter drop
+		sudo nft add rule ip filter OUTPUT udp dport 1900 counter drop
+	
+		#Drop and log invalid packets
+		sudo nft add rule ip filter OUTPUT ct state invalid  counter log prefix \"DROP INVALID \" flags tcp options flags ip options
+		sudo nft add rule ip filter OUTPUT ct state invalid  counter drop
+	
+		#Allow out TCP
+		sudo nft add rule ip filter OUTPUT tcp dport 20 counter accept
+		sudo nft add rule ip filter OUTPUT tcp dport 21 counter accept
+		sudo nft add rule ip filter OUTPUT tcp dport 22 counter accept
+		sudo nft add rule ip filter OUTPUT tcp dport 53 counter accept
+		sudo nft add rule ip filter OUTPUT tcp dport 80 counter accept
+		sudo nft add rule ip filter OUTPUT tcp dport 443 counter accept
+		
+		#Allow out UDP
+		sudo nft add rule ip filter OUTPUT udp dport 53 counter accept
+		sudo nft add rule ip filter OUTPUT udp sport 53 counter accept
+		
+		#Endrule DROP and LOG ALL
+		sudo nft add rule ip filter OUTPUT counter drop
+		sudo nft add rule ip filter OUTPUT counter log flags tcp options flags ip options		
+	}
 
-#Connection limitations
-#-A INPUT -p tcp -syn -m multiport --dport 80,53,443,20,22 -m connlimit --connlimit-above 20 -j DROP
+#sudo nft add rule ip filter FORWARD counter drop
+#sudo nft add rule ip filter FORWARD counter log flags tcp options flags ip options
+ 
+#Examples:
+#https://wiki.gentoo.org/wiki/Nftables/Examples
+#https://wiki.debian.org/nftables
+#https://wiki.archlinux.org/title/nftables
 
-#Spoofed packets
-# sudo iptables -A INPUT -i eth1 -s ! 192.168.10.0/24 -j LOG --log-prefix "SPOOFED PKT "
-# sudo iptables -A INPUT -i eth1 -s ! 192.168.10.0/24 -j DROP
+}
 
-#Allow out TCP
-sudo nft add rule ip filter OUTPUT tcp dport 20 counter accept
-sudo nft add rule ip filter OUTPUT tcp dport 21 counter accept
-sudo nft add rule ip filter OUTPUT tcp dport 22 counter accept
-sudo nft add rule ip filter OUTPUT tcp dport 53 counter accept
-sudo nft add rule ip filter OUTPUT tcp dport 80 counter accept
-sudo nft add rule ip filter OUTPUT tcp dport 443 counter accept
 
-#Allow out UDP
-sudo nft add rule ip filter OUTPUT udp dport 53 counter accept
-sudo nft add rule ip filter OUTPUT udp sport 53 counter accept
-
-#Allow in SSH (add SSH for only one IP region for greater protection)
-sudo nft add rule ip filter INPUT tcp dport 22 counter accept
-sudo nft add rule ip filter INPUT udp dport 22 counter accept
-
-#Endrule DROP and LOG ALL
-sudo nft add rule ip filter INPUT counter log flags tcp options flags ip options
-sudo nft add rule ip filter FORWARD counter log flags tcp options flags ip options
-sudo nft add rule ip filter OUTPUT counter log flags tcp options flags ip options
-sudo nft add rule ip filter INPUT counter drop
-sudo nft add rule ip filter FORWARD counter drop
-sudo nft add rule ip filter OUTPUT counter drop
 
 
 
